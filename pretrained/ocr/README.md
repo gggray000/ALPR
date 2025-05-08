@@ -12,5 +12,5 @@ Google Colab</br>
 Python Version = 3.11.12 
 
 ## Source
-<url>https://blog.roboflow.com/how-to-use-easyocr/</url>
+<url>https://blog.roboflow.com/how-to-use-easyocr/</url> </br>
 <url>https://www.kaggle.com/datasets/abdelhamidzakaria/european-license-plates-dataset</url>
