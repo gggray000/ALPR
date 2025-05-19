@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import numpy as np
 import yolov5
 
@@ -13,7 +14,7 @@ model.multi_label = False  # NMS multiple labels per box
 model.max_det = 1000  # maximum number of detections per image
 
 # set image
-img = str(Path("input/car2.png"))
+img = str(Path("input/car4.jpg"))
 
 # perform inference
 results = model(img, size=640)
@@ -35,5 +36,5 @@ categories = predictions[:, 5]
 # show detection bounding boxes on image
 results.show()
 
-# save results into "results/" folder
-results.save(save_dir='results/')
+# Render bounding boxes on the original image
+results.render()  # updates results.ims with boxes and labels
