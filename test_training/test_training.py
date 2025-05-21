@@ -20,11 +20,11 @@ def train():
     # what is optimizer and loss function?
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    model.fit(x_train, y_train, epochs=5)
-    model.save('handwritten.keras')
+    model.fit(x_train, y_train, epochs=500)
+    model.save('/home/stud3/Desktop/test_model_training/test_training/handwritten.keras')
 
     # after training
-    model= tf.keras.models.load_model('handwritten.keras')
+    model= tf.keras.models.load_model('/home/stud3/Desktop/test_model_training/test_training/handwritten.keras')
     loss, accuracy = model.evaluate(x_test, y_test)
 
     print(loss)
@@ -32,9 +32,9 @@ def train():
 
 def apply(model):
     image_number = 1
-    while os.path.isfile(f"digits/digit{image_number}.png"):
+    while os.path.isfile(f"/home/stud3/Desktop/test_model_training/test_training/digits/digit{image_number}.png"):
         try:
-            img = cv2.imread(f"digits/digit{image_number}.png")[:,:,0]
+            img = cv2.imread(f"/home/stud3/Desktop/test_model_training/test_training/digits/digit{image_number}.png")[:,:,0]
             img = np.invert(np.array([img]))
             prediction = model.predict(img)
             # Giving the number with the highest activation. What is activation?
@@ -48,5 +48,5 @@ def apply(model):
 
 if __name__ == '__main__':
     #train()
-    model = tf.keras.models.load_model('handwritten.keras')
+    model = tf.keras.models.load_model('/home/stud3/Desktop/test_model_training/test_training/handwritten.keras')
     apply(model)
