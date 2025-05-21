@@ -47,5 +47,6 @@ def apply(model):
             image_number += 1
 
 if __name__ == '__main__':
+    #train()
     model = tf.keras.models.load_model('handwritten.keras')
     apply(model)

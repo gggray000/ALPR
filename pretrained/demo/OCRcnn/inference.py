@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 # Load model
-model = load_model("ocr_plate_model.h5")
+model = load_model("/home/stud3/Desktop/test_model_training/pretrained/demo/OCRcnn/ocr_plate_model.h5")
 
 # Map label index to character
 idx_to_char = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -56,7 +56,7 @@ def recognize_plate(image_path):
 
 # ============================
 # TEST ON ALL IMAGES IN plates/
-plate_dir = r"C:\Users\tuyet\PycharmProjects\ALPR\image"
+plate_dir = r"/home/stud3/Desktop/test_model_training/pretrained/image"
 for filename in os.listdir(plate_dir):
     if filename.lower().endswith((".png", ".jpg")):
         full_path = os.path.join(plate_dir, filename)

@@ -115,7 +115,7 @@ def load_data(dataset_path, img_size=32):
     return np.array(X), np.array(y)
 
 # Load data
-X, y = load_data(r"C:\Users\tuyet\PycharmProjects\ALPR\dataset")  # ← Change this to your dataset path
+X, y = load_data(r"/home/stud3/Desktop/test_model_training/pretrained/dataset")  # ← Change this to your dataset path
 X = X.reshape(-1, 32, 32, 1)
 y = to_categorical(y, num_classes=len(classes))
 
@@ -135,7 +135,7 @@ model = Sequential([
 
 # Compile & train
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test))
+model.fit(X_train, y_train, epochs=1000, validation_data=(X_test, y_test))
 
 # Save model
 model.save("ocr_plate_model.h5")
