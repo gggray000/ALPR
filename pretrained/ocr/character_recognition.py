@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from google.colab.patches import cv2_imshow
 
-Image_path = "/content/6473GZR.png"
+Image_path = "/content/plate2.png"
 
 reader = easyocr.Reader(['en'], model_storage_directory='/content/sample_data')
 # Perform text detection on the image
