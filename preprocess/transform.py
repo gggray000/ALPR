@@ -92,8 +92,7 @@ if __name__ == '__main__':
     image = cv2.imread(args["image"])
     pts = np.array(eval(args["coords"]), dtype = "float32")
 
-    # apply the four point transform to obtain a "birds eye view" of
-    # the image
+    # apply the four point transform to obtain a "birds eye view" of the image
     warped = four_point_transform(image, pts)
     cv2.imshow("Original", image)
     cv2.imshow("Warped", warped)
