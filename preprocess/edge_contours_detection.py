@@ -48,7 +48,7 @@ def find_contours(image, edged):
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
 
-		output = transform(image)
+		output = transform(image, screenCnt)
 		return output
 
 	else:
@@ -63,7 +63,7 @@ def find_contours(image, edged):
 		cv2.waitKey(0)
 		return output
 
-def transform(image):
+def transform(image, screenCnt):
 	
 	print("STEP 3: Apply perspective transform")
 	ratio = image.shape[0] / 500.0 # parameter to scan text from original image
@@ -77,10 +77,16 @@ def transform(image):
 	Might need refactoring in the future.
 	"""
 	output = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)
-	T = threshold_local(output, 11, offset = 10, method = "gaussian")
-	output = (output > T).astype("uint8") * 255
+	# T = threshold_local(output, 11, offset = 10, method = "gaussian")
+	# output = (output > T).astype("uint8") * 255
+	 # Use Otsu thresholding instead of adaptive
+	_, output = cv2.threshold(output, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-	cv2.imshow("Original", imutils.resize(orig, height = 650))
+    # Optional: Fill gaps using morphology
+	kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+	output = cv2.morphologyEx(output, cv2.MORPH_CLOSE, kernel)
+
+	cv2.imshow("Original", imutils.resize(image.copy(), height = 650))
 	cv2.imshow("Scanned", imutils.resize(output, height = 650))
 	cv2.waitKey(0)
 

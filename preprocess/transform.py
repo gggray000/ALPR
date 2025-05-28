@@ -77,9 +77,9 @@ def four_point_transform(image, pts):
 
     # compute the perspective transform matrix and then apply it
     M = cv2.getPerspectiveTransform(rect, dst)
-    warped = cv2.warpPerspective(image, M, (maxWidth, maxHeight))
+    transformed = cv2.warpPerspective(image, M, (maxWidth, maxHeight))
 
-    return warped
+    return transformed
 
 if __name__ == '__main__':
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     pts = np.array(eval(args["coords"]), dtype = "float32")
 
     # apply the four point transform to obtain a "birds eye view" of the image
-    warped = four_point_transform(image, pts)
+    transformed = four_point_transform(image, pts)
     cv2.imshow("Original", image)
-    cv2.imshow("Warped", warped)
+    cv2.imshow("Warped", transformed)
     cv2.waitKey(0)
