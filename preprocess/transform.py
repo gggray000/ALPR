@@ -95,5 +95,5 @@ if __name__ == '__main__':
     # apply the four point transform to obtain a "birds eye view" of the image
     transformed = four_point_transform(image, pts)
     cv2.imshow("Original", image)
-    cv2.imshow("Warped", transformed)
+    cv2.imshow("Warped", t)
     cv2.waitKey(0)
