@@ -1,1 +1,5 @@
 /test_training/digits
+/pretrained/dataset
+/pretrained/fonts
+/pretrained/image
+test_training/basic_CNN/dataset
