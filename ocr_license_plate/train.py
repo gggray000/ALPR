@@ -124,7 +124,7 @@ class CustomRandomRotate:
 
 # Create a list of all the images and labels in the dataset
 dataset, vocab, max_len = [], set(), 0
-dataset_path = os.path.join("..", "Datasets", "plates")
+dataset_path = "/home/stud3/Desktop/ALPR/Datasets/plates"
 for file in os.listdir(dataset_path):
     if file.endswith(".jpg") or file.endswith(".png"):
         label = os.path.splitext(file)[0]
@@ -206,7 +206,7 @@ model.fit(
     validation_data=val_data_provider,
     epochs=configs.train_epochs,
     callbacks=callbacks,
-    workers=configs.train_workers
+    #workers=configs.train_workers
 )
 
 # Save training and validation datasets as csv files

@@ -46,10 +46,11 @@ def extract_filtered_contours(image, filtered):
         roi = np.expand_dims(roi, axis=-1)# Add channel dim (H, W, 1)
         
         characters.append(roi)
-    return np.array(characters)
+    #return np.array(characters)
+    return characters
 
 def segmentater(img_path):
-    input = preprocess(image_path)
+    input = preprocess(img_path)
     img, filtered = segmentate(input)
     result = extract_filtered_contours(img, filtered)
 

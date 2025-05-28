@@ -64,11 +64,11 @@ if __name__ == "__main__":
     from tqdm import tqdm
     from mltu.configs import BaseModelConfigs
 
-    configs = BaseModelConfigs.load("Models/license_plate_ocr/202505281155/configs.yaml")
+    configs = BaseModelConfigs.load("/home/stud3/Desktop/ALPR/Models/license_plate_ocr/202505281503/configs.yaml")
 
     model = ImageToWordModel(model_path=configs.model_path, char_list=configs.vocab)
 
-    df = pd.read_csv("Models/license_plate_ocr/202505281155/val.csv").values.tolist()
+    df = pd.read_csv("/home/stud3/Desktop/ALPR/Models/license_plate_ocr/202505281503/val.csv").values.tolist()
 
     accum_cer = []
     for image_path, label in tqdm(df):

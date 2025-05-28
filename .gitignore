@@ -3,3 +3,6 @@
 /pretrained/fonts
 /pretrained/image
 test_training/basic_CNN/dataset
+.idea/
+/Models
+/Datasets

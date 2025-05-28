@@ -3,9 +3,11 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import os
 from pathlib import Path
+import sys
+from segmentation import segmentater
 
 # Load model
-model = load_model("/home/stud3/Desktop/test_model_training/pretrained/demo/OCRcnn/ocr_plate_model.h5")
+model = load_model("/home/stud3/Desktop/ALPR/OCRcnn/ocr_plate_model.h5")
 
 # Map label index to character
 idx_to_char = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -47,18 +49,28 @@ def predict_characters(char_images):
         result += char
     return result
 
-def recognize_plate(image_path):
-    plate_img = cv2.imread(image_path)
-    thresh = preprocess_plate(plate_img)
-    char_images = segment_characters(thresh)
-    plate_text = predict_characters(char_images)
-    return plate_text
+#def recognize_plate(image_path):
+    #plate_img = cv2.imread(image_path)
+    #thresh = preprocess_plate(plate_img)
+    #char_images = segment_characters(thresh)
+    #plate_text = predict_characters(char_images)
+    #return plate_text
 
 # ============================
 # TEST ON ALL IMAGES IN plates/
-plate_dir = r"/home/stud3/Desktop/test_model_training/pretrained/image"
+plate_dir = r"/home/stud3/Desktop/ALPR/OCRcnn/input/"
 for filename in os.listdir(plate_dir):
+    model.summary()
+    path = "/home/stud3/Desktop/ALPR/OCRcnn/input/plate8.jpg"
+    print(path)
     if filename.lower().endswith((".png", ".jpg")):
-        full_path = os.path.join(plate_dir, filename)
-        text = recognize_plate(full_path)
-        print(f"{filename}: {text}")
+        #full_path = os.path.join(plate_dir, filename)
+        result = ""
+        characters = segmentater(path)
+        for c in characters:
+            pred = model.predict(c)
+        char = idx_to_char[np.argmax(pred)]
+        result += char
+
+        #text = recognize_plate(full_path)
+        print(f"{filename}: {result}")
