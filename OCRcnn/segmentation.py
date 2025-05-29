@@ -2,7 +2,7 @@ import cv2
 import imutils
 import sys
 import numpy as np
-from preprocessor import preprocess
+from normalizer import normalize
 
 def get_large_contours(input):
     contours= cv2.findContours(input.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -44,13 +44,12 @@ def extract_filtered_contours(image, filtered):
         cv2.waitKey(0)
         roi = roi.astype("float32") / 255.0
         roi = np.expand_dims(roi, axis=-1)# Add channel dim (H, W, 1)
-        
         characters.append(roi)
     #return np.array(characters)
     return characters
 
-def segmentater(img_path):
-    input = preprocess(img_path)
+def preprocess(img_path):
+    input = normalize(img_path)
     img, filtered = segmentate(input)
     result = extract_filtered_contours(img, filtered)
 
@@ -62,6 +61,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     image_path = sys.argv[1]
-    input = preprocess(image_path)
+    input = normalize(image_path)
     img, filtered = segmentate(input)
     extract_filtered_contours(img, filtered)

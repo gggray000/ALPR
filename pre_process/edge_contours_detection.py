@@ -23,7 +23,7 @@ def edge_detection(args):
 
 	return image, edged
 
-def find_contours(image, edged):
+def find_plate(image, edged):
 	print("STEP 2: Find contours of license plate")
 
 	"""
@@ -48,7 +48,7 @@ def find_contours(image, edged):
 		cv2.waitKey(0)
 		cv2.destroyAllWindows()
 
-		output = transform(image, screenCnt)
+		output = transform_perspective(image, screenCnt)
 		return output
 
 	else:
@@ -63,7 +63,7 @@ def find_contours(image, edged):
 		cv2.waitKey(0)
 		return output
 
-def transform(image, screenCnt):
+def transform_perspective(image, screenCnt):
 	
 	print("STEP 3: Apply perspective transform")
 	ratio = image.shape[0] / 500.0 # parameter to scan text from original image
@@ -99,4 +99,4 @@ if __name__ == '__main__':
 		help = "Path to the image to be scanned")
 	args = vars(ap.parse_args())
 	image, edged = edge_detection(args)
-	output = find_contours(image, edged)
+	output = find_plate(image, edged)

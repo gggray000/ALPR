@@ -1,9 +1,9 @@
 import sys
-from edge_contours_detection import edge_detection, find_contours
+from edge_contours_detection import edge_detection, find_plate
 
-def preprocess(img_path):
+def normalize(img_path):
     image, edged = edge_detection(img_path)
-    output = find_contours(image, edged)
+    output = find_plate(image, edged)
     return output
 
 if __name__ == "__main__":
@@ -12,4 +12,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     image_path = sys.argv[1]
-    result = preprocess(image_path)
+    result = normalize(image_path)

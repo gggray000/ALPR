@@ -4,7 +4,7 @@ from tensorflow.keras.models import load_model
 import os
 from pathlib import Path
 import sys
-from segmentation import segmentater
+from segmentation import preprocess
 
 # Load model
 model = load_model("/home/stud3/Desktop/ALPR/OCRcnn/ocr_plate_model.h5")
@@ -66,9 +66,9 @@ for filename in os.listdir(plate_dir):
     if filename.lower().endswith((".png", ".jpg")):
         #full_path = os.path.join(plate_dir, filename)
         result = ""
-        characters = segmentater(path)
+        characters = preprocess(path)
         for c in characters:
-            pred = model.predict(c)
+            pred = model.predict(np.expand_dims(c, axis=0)) # shape of c: (1, 32, 32, 1)
         char = idx_to_char[np.argmax(pred)]
         result += char
 
