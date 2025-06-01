@@ -8,9 +8,10 @@ from segmentation import preprocess
 
 # Load model
 model = load_model("/home/stud3/Desktop/ALPR/OCRcnn/ocr_plate_model.h5")
-
+model.summary()
 # Map label index to character
 idx_to_char = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
 
 def preprocess_plate(plate_img):
     """ Convert license plate image to grayscale & binary """
@@ -49,28 +50,21 @@ def predict_characters(char_images):
         result += char
     return result
 
-#def recognize_plate(image_path):
-    #plate_img = cv2.imread(image_path)
-    #thresh = preprocess_plate(plate_img)
-    #char_images = segment_characters(thresh)
-    #plate_text = predict_characters(char_images)
-    #return plate_text
+def recognize_plate(image_path):
+    plate_img = cv2.imread(image_path)
+    thresh = preprocess_plate(plate_img)
+    char_images = segment_characters(thresh)
+    plate_text = predict_characters(char_images)
+    return plate_text
 
 # ============================
 # TEST ON ALL IMAGES IN plates/
 plate_dir = r"/home/stud3/Desktop/ALPR/OCRcnn/input/"
 for filename in os.listdir(plate_dir):
-    model.summary()
-    path = "/home/stud3/Desktop/ALPR/OCRcnn/input/plate8.jpg"
-    print(path)
-    if filename.lower().endswith((".png", ".jpg")):
-        #full_path = os.path.join(plate_dir, filename)
-        result = ""
-        characters = preprocess(path)
-        for c in characters:
-            pred = model.predict(np.expand_dims(c, axis=0)) # shape of c: (1, 32, 32, 1)
-        char = idx_to_char[np.argmax(pred)]
-        result += char
 
-        #text = recognize_plate(full_path)
-        print(f"{filename}: {result}")
+    if filename.lower().endswith((".png", ".jpg")):
+        full_path = os.path.join(plate_dir, filename)
+        text = recognize_plate(full_path)
+        print(f"{filename}: {text}")
+        
+        

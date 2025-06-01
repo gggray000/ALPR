@@ -16,10 +16,10 @@ def edge_detection(args):
 	edged = cv2.Canny(gray, 75, 200)
 
 	# show the original image and the edge detected image
-	cv2.imshow("Image", image)
-	cv2.imshow("Edged", edged)
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
+	#cv2.imshow("Image", image)
+	#cv2.imshow("Edged", edged)
+	#cv2.waitKey(0)
+	#cv2.destroyAllWindows()
 
 	return image, edged
 
@@ -44,9 +44,9 @@ def find_plate(image, edged):
 	# draw outline of the plate
 	if(screenCnt is not None):
 		cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
-		cv2.imshow("Outline", image)
-		cv2.waitKey(0)
-		cv2.destroyAllWindows()
+		#cv2.imshow("Outline", image)
+		#cv2.waitKey(0)
+		#cv2.destroyAllWindows()
 
 		output = transform_perspective(image, screenCnt)
 		return output
@@ -58,9 +58,9 @@ def find_plate(image, edged):
 		"""
 		T = threshold_local(edged, 11, offset=10, method="gaussian")
 		output = (edged > T).astype("uint8") * 255
-		cv2.imshow("Original", imutils.resize(image.copy(), height=650))
-		cv2.imshow("Scanned", imutils.resize(output, height=650))
-		cv2.waitKey(0)
+		#cv2.imshow("Original", imutils.resize(image.copy(), height=650))
+		#cv2.imshow("Scanned", imutils.resize(output, height=650))
+		#cv2.waitKey(0)
 		return output
 
 def transform_perspective(image, screenCnt):
@@ -86,9 +86,9 @@ def transform_perspective(image, screenCnt):
 	kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
 	output = cv2.morphologyEx(output, cv2.MORPH_CLOSE, kernel)
 
-	cv2.imshow("Original", imutils.resize(image.copy(), height = 650))
-	cv2.imshow("Scanned", imutils.resize(output, height = 650))
-	cv2.waitKey(0)
+	#cv2.imshow("Original", imutils.resize(image.copy(), height = 650))
+	#cv2.imshow("Scanned", imutils.resize(output, height = 650))
+	#cv2.waitKey(0)
 
 	return output
 
