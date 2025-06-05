@@ -5,16 +5,16 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from PIL import Image
 import nvtx
-#import mlflow
+import mlflow
 
-#mlflow.set_tracking_uri(uri="http://localhost:5000")
-#mlflow.set_experiment("hand_written_digits")
+mlflow.set_tracking_uri(uri="http://localhost:5001")
+mlflow.set_experiment("hand_written_digits")
 
 class MLflowLogger(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         if logs is not None:
-            for key, value in logs.item():
-                mlfow.log_metric(key, value, step=epoch)
+            for key, value in logs.items():
+                mlflow.log_metric(key, value, step=epoch)
 
 @nvtx.annotate("Training Model", color="green")
 def train():
@@ -32,20 +32,20 @@ def train():
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    # with mlflow.start_run():
-    #     mlflow.log_param("epochs", 300)
-    #     mlflow.log_param("batch_size",32)
-    #     model.fit(trains_ds, 
-    #               epochs=100,
-    #               validation_data=val_ds,
-    #               callbacks=[MLflowLogger])
+    with mlflow.start_run():
+        mlflow.log_param("epochs", 300)
+        mlflow.log_param("batch_size",32)
+        model.fit(x_train,
+                  y_train, 
+                  epochs=100,
+                  callbacks=[MLflowLogger()])
 
-    #     loss, accurracy = model.evaluate(test_ds)
-    #     mlflow.log_metric("test_loss", loss)
-    #     mlflow.log_metric("test_accuracy", accuracy)
-    #     mlflow.tensorflow.log_model(model, "model")
+        loss, accurracy = model.evaluate(x_test, y_test)
+        mlflow.log_metric("test_loss", loss)
+        mlflow.log_metric("test_accuracy", accurracy)
+        mlflow.tensorflow.log_model(model, "model")
 
-    model.fit(x_train, y_train, epochs=500)
+    #model.fit(x_train, y_train, epochs=300)
     model.summary()
     model.save(f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/handwritten.keras")
 
@@ -76,6 +76,6 @@ def apply(model):
             image_number += 1
 
 if __name__ == '__main__':
-    #train()
+    train()
     model = tf.keras.models.load_model(f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/handwritten.keras")
     apply(model)
