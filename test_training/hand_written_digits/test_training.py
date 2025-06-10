@@ -16,18 +16,26 @@ class MLflowLogger(tf.keras.callbacks.Callback):
             for key, value in logs.items():
                 mlflow.log_metric(key, value, step=epoch)
 
+class NvtxEpochLogger(tf.keras.callbacks.Callback):
+    def on_epoch_begin(self, epoch, logs=None):
+        self.epoch_range = nvtx.start_range(f"Epoch {epoch+1}", color="blue")
+
+    def on_epoch_end(self, epoch, logs=None):
+        nvtx.end_range(self.epoch_range)
+        print(f"[NVTX] Epoch {epoch+1} finished.")
+
 @nvtx.annotate("Normalizing Data", color="blue")
-def normalize_data(x_train, y_train):
+def normalize_data(x_train, x_test):
     x_train = tf.keras.utils.normalize(x_train, axis=1)
-    y_train = tf.keras.utils.normalize(x_test, axis=1)
-    return x_train, y_train
+    x_test = tf.keras.utils.normalize(x_test, axis=1)
+    return x_train, x_test
 
 @nvtx.annotate("Training Model", color="green")
 def train():
     mnist = tf.keras.datasets.mnist
-    (x_train_raw, y_train_raw),(x_test, y_test) = mnist.load_data()
+    (x_train_raw, y_train),(x_test_raw, y_test) = mnist.load_data()
 
-    x_train, y_train = normalize_data(x_train_raw, y_train_raw)
+    x_train, x_test = normalize_data(x_train_raw, x_test_raw)
 
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Flatten(input_shape=(28, 28)))
@@ -37,61 +45,19 @@ def train():
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    # with mlflow.start_run():
-    #     mlflow.log_param("epochs", 100)
-    #     mlflow.log_param("batch_size",32)
-    #     model.fit(x_train,
-    #               y_train, 
-    #               epochs=100,
-    #               callbacks=[MLflowLogger()])
-
-    #     loss, accurracy = model.evaluate(x_test, y_test)
-    #     mlflow.log_metric("test_loss", loss)
-    #     mlflow.log_metric("test_accuracy", accurracy)
-    #     mlflow.tensorflow.log_model(model, "model")
-
     with mlflow.start_run():
-    mlflow.log_param("epochs", 5)
-    mlflow.log_param("batch_size", 32)
+        mlflow.log_param("epochs", 200)
+        mlflow.log_param("batch_size",32)
+        model.fit(x_train,
+                  y_train, 
+                  epochs=200,
+                  callbacks=[MLflowLogger(), NvtxEpochLogger()])
 
-    batch_size = 32
-    epochs = 5
+        loss, accurracy = model.evaluate(x_test, y_test)
+        mlflow.log_metric("test_loss", loss)
+        mlflow.log_metric("test_accuracy", accurracy)
+        mlflow.tensorflow.log_model(model, "model")
 
-    train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(1000).batch(batch_size)
-
-    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy()
-    optimizer = tf.keras.optimizers.Adam()
-    train_acc_metric = tf.keras.metrics.SparseCategoricalAccuracy()
-
-    for epoch in range(epochs):
-        with nvtx.annotate(f"Epoch {epoch+1}", color="green"):
-            print(f"Epoch {epoch+1}/{epochs}")
-
-            epoch_loss = 0.0
-            num_batches = 0
-
-            for step, (x_batch, y_batch) in enumerate(train_dataset):
-                with tf.GradientTape() as tape:
-                    logits = model(x_batch, training=True)
-                    loss = loss_fn(y_batch, logits)
-
-                grads = tape.gradient(loss, model.trainable_variables)
-                optimizer.apply_gradients(zip(grads, model.trainable_variables))
-
-                train_acc_metric.update_state(y_batch, logits)
-                epoch_loss += loss.numpy()
-                num_batches += 1
-
-            avg_loss = epoch_loss / num_batches
-            avg_acc = train_acc_metric.result().numpy()
-            train_acc_metric.reset_states()
-
-            print(f"Loss: {avg_loss:.4f} - Accuracy: {avg_acc:.4f}")
-
-            mlflow.log_metric("loss", avg_loss, step=epoch)
-            mlflow.log_metric("accuracy", avg_acc, step=epoch)
-
-    #model.fit(x_train, y_train, epochs=300)
     model.summary()
     model.save(f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/handwritten.keras")
 
@@ -118,7 +84,7 @@ def apply(model):
     image_number = 1
     while os.path.isfile(f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/digits/digit{image_number}.png"):
         try:
-            infer_single_image("/home/stud3/Desktop/ALPR/test_training/hand_written_digits/digits/digit{image_number}.png", model)
+            infer_single_image(f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/digits/digit{image_number}.png", model)
         except Exception as e:
             print(f"Error: {e}")
         finally:
