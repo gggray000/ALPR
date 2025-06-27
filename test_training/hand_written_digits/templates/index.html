@@ -10,8 +10,8 @@
 <body>
 <main class="container">
   <h1>ALPR</h1>
-  <video id="video" width="640" height="480" autoplay></video>
-  <button id="snap">Snap Photo</button>
+  <label for="fileInput" class="button">Take a Photo</label>
+  <input type="file" accept="image/jpeg,image/png" capture="environment" id="fileInput">
   <canvas id="canvas" width="640" height="480"></canvas>
   <h3 id="result"></h3>
 </main>

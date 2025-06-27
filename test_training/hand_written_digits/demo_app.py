@@ -12,7 +12,7 @@ def create_app(test_config=None):
 
     model = tf.keras.models.load_model("./handwritten.keras")
 
-    @app.route('/predict', methods=['POST'])
+    @app.route('/alpr/predict', methods=['POST'])
     def predict_digit():
         file=request.files.get('image')
         if not file:
@@ -22,7 +22,7 @@ def create_app(test_config=None):
         prediction = predict(model, image)
         return jsonify({'prediction':int(prediction)})
 
-    @app.route('/frontend', methods=['GET'])
+    @app.route('/alpr', methods=['GET'])
     def show_frontend():
         return render_template('index.html')
 
