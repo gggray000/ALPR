@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 def preprocess_image(img_path):
     # Load the image in grayscale
@@ -12,6 +13,8 @@ def preprocess_image(img_path):
     # Resize if necessary (should be 28x28 for MNIST)
     if img.shape != (28, 28):
         img = cv2.resize(img, (28, 28))
+        plt.imshow(img, cmap=plt.cm.binary)
+        plt.show()
 
     # Invert colors (if background is white and digit is black)
     img = np.invert(img)
@@ -31,7 +34,7 @@ def predict(img_path, model_path):
     print(f"Predicted digit: {predicted_digit}")
 
 if __name__ == "__main__":
-    predict(f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/digits/digit2.png", 
+    predict(f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/digits/digit_1_big.png", 
             f"/home/stud3/Desktop/ALPR/test_training/hand_written_digits/handwritten.keras")
     
 # For flask, we need a preprocessing method, to read image from file stream using PIL Image, then do resizing.
