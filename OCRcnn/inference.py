@@ -3,8 +3,6 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import os
 from pathlib import Path
-import sys
-from segmentation import preprocess
 
 # Load model
 model = load_model("/home/stud3/Desktop/ALPR/OCRcnn/ocr_plate_model.h5")
