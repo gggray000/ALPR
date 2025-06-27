@@ -22,14 +22,14 @@ snapButton.addEventListener("click", function () {
         const formData = new FormData();
         formData.append('image', blob, 'snapshot.jpg'); // Key must match Flask: 'image'
 
-        fetch('http://127.0.0.1:5002/predict', {
+        fetch('http://172.16.17.66:5002/predict', {
             method: 'POST',
             body: formData
         })
             .then(response => response.json())
             .then(data => {
-               console.log("Prediction:", data);
-                document.querySelector('.result').textContent = "Prediction: " + data.toString();
+               console.log("Prediction:", data.prediction);
+                document.getElementById('result').textContent = "Prediction: " + data.prediction.toString();
                 //alert("Predicted Digit: " + data.data);
             })
             .catch(error => {

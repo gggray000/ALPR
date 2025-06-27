@@ -34,6 +34,7 @@ def preprocess_image(img):
         img = cv2.resize(img, (28, 28))
 
     # Normalize and reshape to match model input
+    img = np.invert(img)
     img = img.astype("float32") / 255.0
     img = np.expand_dims(img, axis=0)  # Shape: (1, 28, 28)
     
