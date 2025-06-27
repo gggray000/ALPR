@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import tensorflow as tf
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from PIL import Image
 import io
@@ -13,7 +13,7 @@ def create_app(test_config=None):
     model = tf.keras.models.load_model("./handwritten.keras")
 
     @app.route('/predict', methods=['POST'])
-    def predictDigit():
+    def predict_digit():
         file=request.files.get('image')
         if not file:
             return jsonify({'error':'No image uploaded'}), 400
@@ -21,6 +21,10 @@ def create_app(test_config=None):
         image = Image.open(io.BytesIO(file.read()))
         prediction = predict(model, image)
         return jsonify({'prediction':int(prediction)})
+
+    @app.route('/frontend', methods=['GET'])
+    def show_frontend():
+        return render_template('index.html')
 
     return app
 
